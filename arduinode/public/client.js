@@ -1,0 +1,202 @@
+/*
+  webSocket client
+  context: P5.js
+  A webSocket client that draws a ball on the screen
+  that's moved around with data from the server. The server
+  is sending data received serially from an Arduino.
+  The server is sending:
+    x, y, buttonValue\n
+    created 10 June 2015
+    by Tom Igoe
+*/
+
+var socket = io.connect('http://localhost:8080');          // socket.io instance. Connects back to the server
+var x, y;           // readings from the server
+var oldx, oldy;
+
+// function setup() {
+//   createCanvas(400, 300);   // set up the canvas
+//   x = width/2;              // set X and Y in the middle of the screen
+//   y = width/2;
+// }
+
+// function draw() {
+//   background(255);          // make the screen white
+//   var fillColor = 127;      // set the fill color to black
+//   noStroke();
+//   if (button == 1) {        // if the button is not pressed
+//     fillColor = color(0x44, 0x33, 0xAF);  // blue fill color
+//   }
+//   fill(fillColor);          // set the fill color
+//   ellipse(x, y, 30, 30);    // draw the ellipse
+// }
+
+function readData (data) {
+
+
+   // animate("#p1", 'bounce');
+
+  
+ 
+  
+
+
+
+  // console.log(data);
+  var results = data.split(',');  // split the data on the commas
+  // console.log(results);
+  y = results[0];                 // x is the first value
+
+  x = results[1];                 // y is the second value
+
+
+
+if (x != oldx) {
+
+
+
+
+
+$('#p1').removeClass('flipInX');
+    setTimeout(function(){
+          $('#p1').addClass('flipInX');
+          $('#p1').text(x);
+
+    }, 50);
+
+
+};
+
+
+  // document.getElementById('p1').innerHTML = x;
+  // button = results[2];            // button is the third value
+  // document.getElementById('serverdata').innerHTML += data;
+  // document.getElementById('p1').innerHTML += x;
+
+  if (y != oldy) {
+
+$('#p2').removeClass('flipInX');
+    setTimeout(function(){
+          $('#p2').addClass('flipInX');
+          $('#p2').text(y);
+
+    }, 50);
+
+  };
+
+  // document.getElementById('p2').innerHTML = y;
+
+  
+
+    //do animation stuff
+// $("#p2").Morphext({
+//     // The [in] animation type. Refer to Animate.css for a list of available animations.
+//     animation: "bounceIn",
+//     // An array of phrases to rotate are created based on this separator. Change it if you wish to separate the phrases differently (e.g. So Simple | Very Doge | Much Wow | Such Cool).
+//     speed: 2000,
+//     complete: function () {
+//         // Called after the entrance animation is executed.
+//     }
+// });
+//end animation stuff
+
+  responsiveVoice.speak("" + x + "");
+
+   responsiveVoice.speak("" + y + "");
+
+
+
+   
+
+  var totalscore = (parseInt(x) + parseInt(y));
+
+  console.log ("totalscore=" + totalscore);
+
+
+  if (totalscore % 5 === 0 && totalscore > 0) {
+
+responsiveVoice.speak("change service");
+
+
+//change service graphic
+
+if( $("#paddle1").css('visibility') == 'hidden') {
+
+  $('#paddle1').removeClass('bounceInDown');
+    setTimeout(function(){
+          $('#paddle1').addClass('bounceInDown');
+          $("#paddle1").css('visibility', 'visible');
+         }, 50);
+
+
+
+
+$("#paddle2").css('visibility', 'hidden');
+
+} else if ( $("#paddle1").css('visibility') == 'visible') {
+
+
+   $('#paddle2').removeClass('bounceInDown');
+    setTimeout(function(){
+          $('#paddle2').addClass('bounceInDown');
+          $("#paddle2").css('visibility', 'visible');
+           }, 50);
+
+  $("#paddle1").css('visibility', 'hidden');
+
+  
+
+};
+
+//end service graphic changes
+
+  };
+
+
+
+oldx = x;
+
+oldy = y;
+
+
+}
+
+
+
+function makeSpeak() {
+
+  responsiveVoice.speak("a new game begins");
+
+}
+
+// when new data comes in the websocket, read it:
+socket.on('message', readData);
+
+$( document ).ready(function() {
+
+
+  // responsiveVoice.speak("new game");
+
+  setTimeout(
+  function() 
+  {
+
+//  var totalscore = 0;
+
+//   if (totalscore % 5 === 0 && totalscore > 0) {
+
+// responsiveVoice.speak("change service");
+
+//  };
+
+    makeSpeak();
+  }, 1000);
+
+    
+});
+
+
+
+
+        
+ 
